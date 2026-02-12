@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import NavBar from "./components/NavBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,12 +14,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "개발자 운세 가챠 🎰 | Dev Fortune Gacha",
+  title: "Dev Playground | 미니 프로젝트 모음",
   description:
-    "매일 달라지는 개발자 운세를 뽑아보세요! RPG 스타일 스탯 카드로 오늘의 코딩 운을 확인합니다.",
+    "프론트엔드 개발자를 위한 미니 프로젝트 모음 - 개발자 운세, 2048, 그리고 더 많은 것들",
   openGraph: {
-    title: "개발자 운세 가챠 🎰",
-    description: "오늘의 개발자 운세를 뽑아보세요! SSS 등급을 노려봅시다.",
+    title: "Dev Playground",
+    description: "프론트엔드 개발자를 위한 미니 프로젝트 모음",
     type: "website",
   },
 };
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <NavBar />
         {children}
       </body>
     </html>
