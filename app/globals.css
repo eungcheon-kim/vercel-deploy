@@ -1,26 +1,278 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #06060e;
+  --foreground: #e4e4e7;
+  --accent: #8b5cf6;
+  --accent-2: #c084fc;
+  --gold: #fbbf24;
+  --card-bg: #0c0c18;
+  --card-border: #1a1a2e;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-gold: var(--gold);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
+
+/* ===== Background ===== */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* ===== Gradient Orbs ===== */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 0;
+}
+.orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #8b5cf6, transparent 70%);
+  top: -150px; right: -100px;
+  animation: orb-float-1 18s ease-in-out infinite;
+}
+.orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #ec4899, transparent 70%);
+  bottom: -100px; left: -80px;
+  animation: orb-float-2 22s ease-in-out infinite;
+}
+.orb-3 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, #fbbf24, transparent 70%);
+  top: 50%; left: 40%;
+  animation: orb-float-3 15s ease-in-out infinite;
+}
+
+@keyframes orb-float-1 {
+  0%,100% { transform: translate(0,0); }
+  50% { transform: translate(-60px,40px); }
+}
+@keyframes orb-float-2 {
+  0%,100% { transform: translate(0,0); }
+  50% { transform: translate(50px,-60px); }
+}
+@keyframes orb-float-3 {
+  0%,100% { transform: translate(0,0) scale(0.8); }
+  50% { transform: translate(-80px,-40px) scale(1.1); }
+}
+
+/* ===== Noise Overlay ===== */
+.noise::after {
+  content: '';
+  position: fixed; inset: 0;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ===== Basic Animations ===== */
+@keyframes fade-in-up {
+  from { opacity:0; transform:translateY(24px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.anim-fade-up {
+  animation: fade-in-up 0.7s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fade-in-scale {
+  from { opacity:0; transform:scale(0.9); }
+  to { opacity:1; transform:scale(1); }
+}
+.anim-fade-scale {
+  animation: fade-in-scale 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* ============================================
+   GACHA - TAP TO CRACK SYSTEM
+   ============================================ */
+
+/* --- Capsule idle float --- */
+@keyframes capsule-float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.capsule-float { animation: capsule-float 3s ease-in-out infinite; }
+
+/* --- Capsule hover glow --- */
+@keyframes capsule-idle-glow {
+  0%,100% { box-shadow: 0 0 20px rgba(139,92,246,0.15), 0 0 40px rgba(139,92,246,0.05); }
+  50% { box-shadow: 0 0 30px rgba(139,92,246,0.25), 0 0 60px rgba(139,92,246,0.1); }
+}
+.capsule-idle-glow { animation: capsule-idle-glow 2.5s ease-in-out infinite; }
+
+/* --- Hit impact (single quick shake) --- */
+@keyframes hit-impact {
+  0% { transform: scale(1) rotate(0deg); }
+  15% { transform: scale(0.92) rotate(-3deg); }
+  30% { transform: scale(1.06) rotate(2deg); }
+  50% { transform: scale(0.97) rotate(-1deg); }
+  70% { transform: scale(1.02) rotate(1deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.hit-impact { animation: hit-impact 0.35s ease-out; }
+
+/* --- Hit flash (white overlay flash on tap) --- */
+@keyframes hit-flash {
+  0% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+/* --- Impact ring (ripple from tap point) --- */
+@keyframes impact-ring {
+  0% { transform: scale(0.3); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* --- Rumble (continuous shake at high crack level) --- */
+@keyframes rumble {
+  0%,100% { transform: translate(0,0); }
+  10% { transform: translate(-3px,2px); }
+  20% { transform: translate(3px,-2px); }
+  30% { transform: translate(-4px,-1px); }
+  40% { transform: translate(4px,2px); }
+  50% { transform: translate(-2px,3px); }
+  60% { transform: translate(3px,-3px); }
+  70% { transform: translate(-3px,1px); }
+  80% { transform: translate(2px,-2px); }
+  90% { transform: translate(-1px,3px); }
+}
+
+/* --- Energy ring pulse --- */
+@keyframes energy-ring {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* --- Energy particles orbiting --- */
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+}
+
+/* --- Screen flash --- */
+@keyframes screen-flash {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.screen-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  animation: screen-flash 1s ease-out forwards;
+}
+
+/* --- Explosion burst rays --- */
+@keyframes burst-ray {
+  0% { transform: scaleY(0); opacity: 1; }
+  50% { transform: scaleY(1); opacity: 0.8; }
+  100% { transform: scaleY(2.5); opacity: 0; }
+}
+
+/* --- Explosion ring --- */
+@keyframes explosion-ring {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(5); opacity: 0; }
+}
+.explosion-ring {
+  animation: explosion-ring 0.8s ease-out forwards;
+}
+
+/* --- Shatter pieces --- */
+@keyframes shatter-1 { 0% { transform: translate(0,0) rotate(0) scale(1); opacity:1; } 100% { transform: translate(-100px,-90px) rotate(-40deg) scale(0.5); opacity:0; } }
+@keyframes shatter-2 { 0% { transform: translate(0,0) rotate(0) scale(1); opacity:1; } 100% { transform: translate(90px,-100px) rotate(35deg) scale(0.5); opacity:0; } }
+@keyframes shatter-3 { 0% { transform: translate(0,0) rotate(0) scale(1); opacity:1; } 100% { transform: translate(-90px,90px) rotate(45deg) scale(0.5); opacity:0; } }
+@keyframes shatter-4 { 0% { transform: translate(0,0) rotate(0) scale(1); opacity:1; } 100% { transform: translate(100px,85px) rotate(-35deg) scale(0.5); opacity:0; } }
+@keyframes shatter-5 { 0% { transform: translate(0,0) rotate(0) scale(1); opacity:1; } 100% { transform: translate(-40px,-120px) rotate(25deg) scale(0.4); opacity:0; } }
+@keyframes shatter-6 { 0% { transform: translate(0,0) rotate(0) scale(1); opacity:1; } 100% { transform: translate(50px,110px) rotate(-30deg) scale(0.4); opacity:0; } }
+
+/* --- Card Reveal --- */
+@keyframes card-reveal {
+  0% { transform: scale(0) rotateY(180deg); opacity:0; filter: brightness(3); }
+  40% { transform: scale(1.15) rotateY(90deg); opacity:0.7; filter: brightness(2); }
+  70% { transform: scale(1.05) rotateY(0deg); opacity:1; filter: brightness(1.3); }
+  100% { transform: scale(1) rotateY(0deg); opacity:1; filter: brightness(1); }
+}
+.card-reveal { animation: card-reveal 1s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+/* --- Rarity text slam --- */
+@keyframes rarity-slam {
+  0% { transform: scale(3); opacity:0; filter: blur(10px); }
+  60% { transform: scale(0.9); opacity:1; filter: blur(0); }
+  80% { transform: scale(1.1); opacity:1; }
+  100% { transform: scale(1); opacity:1; }
+}
+.rarity-slam { animation: rarity-slam 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+/* --- Sparkle burst from center --- */
+@keyframes sparkle-burst {
+  0% { transform: translate(0,0) scale(1); opacity:1; }
+  100% { opacity:0; }
+}
+
+/* ===== Rarity Glow ===== */
+.rarity-SSS { box-shadow: 0 0 40px rgba(251,191,36,0.4), 0 0 80px rgba(251,191,36,0.15), inset 0 0 30px rgba(251,191,36,0.05); }
+.rarity-SS  { box-shadow: 0 0 35px rgba(236,72,153,0.4), 0 0 70px rgba(236,72,153,0.15), inset 0 0 25px rgba(236,72,153,0.05); }
+.rarity-S   { box-shadow: 0 0 30px rgba(139,92,246,0.4), 0 0 60px rgba(139,92,246,0.15), inset 0 0 20px rgba(139,92,246,0.05); }
+.rarity-A   { box-shadow: 0 0 25px rgba(59,130,246,0.35), 0 0 50px rgba(59,130,246,0.12); }
+.rarity-B   { box-shadow: 0 0 20px rgba(34,197,94,0.3), 0 0 40px rgba(34,197,94,0.1); }
+.rarity-C   { box-shadow: 0 0 15px rgba(161,161,170,0.2); }
+
+/* ===== Stat Bar Fill ===== */
+@keyframes stat-fill {
+  from { width: 0%; }
+}
+.stat-bar-fill {
+  animation: stat-fill 1s ease-out forwards;
+}
+
+/* ===== Floating Particles ===== */
+@keyframes float-up {
+  0% { transform: translateY(0) scale(1); opacity:0.8; }
+  100% { transform: translateY(-150px) scale(0); opacity:0; }
+}
+
+/* ===== Progress bar glow pulse ===== */
+@keyframes progress-glow {
+  0%,100% { filter: brightness(1); }
+  50% { filter: brightness(1.4); }
+}
+
+/* ===== Selection ===== */
+::selection {
+  background: rgba(139, 92, 246, 0.3);
+  color: #fff;
+}
+
+html { scroll-behavior: smooth; }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.3); border-radius: 3px; }

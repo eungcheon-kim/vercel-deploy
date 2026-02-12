@@ -1,64 +1,67 @@
-import Image from "next/image";
+import GachaMachine from "./components/GachaMachine";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="noise grid-bg relative min-h-screen">
+      {/* Background orbs */}
+      <div className="orb orb-1" />
+      <div className="orb orb-2" />
+      <div className="orb orb-3" />
+
+      <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-16">
+        {/* Header */}
+        <div className="mb-12 flex flex-col items-center gap-4 text-center">
+          <div className="anim-fade-up flex items-center gap-2 rounded-full border border-card-border bg-card-bg/60 px-4 py-1.5 backdrop-blur-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-violet-500" />
+            </span>
+            <span className="font-mono text-xs text-zinc-400">
+              오늘의 운세가 준비되었습니다
+            </span>
+          </div>
+
+          <h1
+            className="anim-fade-up text-4xl font-bold tracking-tight sm:text-5xl"
+            style={{ animationDelay: "0.1s" }}
+          >
+            <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+              개발자 운세
+            </span>
+            <span className="ml-2">🎰</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p
+            className="anim-fade-up max-w-sm font-mono text-sm leading-relaxed text-zinc-500"
+            style={{ animationDelay: "0.2s" }}
+          >
+            매일 달라지는 당신의 개발 운세를 확인하세요
+            <br />
+            오늘은 어떤 등급의 개발자일까요?
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Gacha Machine */}
+        <div className="anim-fade-up" style={{ animationDelay: "0.3s" }}>
+          <GachaMachine />
         </div>
+
+        {/* Footer */}
+        <footer
+          className="anim-fade-up mt-16 flex flex-col items-center gap-2"
+          style={{ animationDelay: "0.5s" }}
+        >
+          <div className="flex items-center gap-3 font-mono text-[10px] text-zinc-700">
+            <span>Built with Next.js</span>
+            <span>·</span>
+            <span>Deployed on Vercel</span>
+            <span>·</span>
+            <span>Tailwind CSS</span>
+          </div>
+          <p className="font-mono text-[10px] text-zinc-800">
+            SSS 등급 확률 3% · SS 7% · S 15% · A 25% · B 30% · C 20%
+          </p>
+        </footer>
       </main>
     </div>
   );
