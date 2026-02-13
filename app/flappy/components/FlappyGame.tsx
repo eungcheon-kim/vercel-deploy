@@ -6,16 +6,31 @@ import ScoreBoard from "../../components/ScoreBoard";
 const W = 360;
 const H = 520;
 const BIRD_SIZE = 20;
-const GRAVITY = 0.3;
-const JUMP = -6;
+const GRAVITY = 0.32;
+const JUMP = -6.2;
 const PIPE_WIDTH = 50;
-const PIPE_GAP = 170;
-const PIPE_SPEED = 1.8;
-const PIPE_INTERVAL = 130; // frames
+
+// Difficulty scales with score
+const BASE_PIPE_GAP = 170;      // easy start
+const MIN_PIPE_GAP = 130;       // hard cap
+const BASE_PIPE_SPEED = 1.6;    // easy start
+const MAX_PIPE_SPEED = 3.0;     // hard cap
+const BASE_PIPE_INTERVAL = 130; // easy start (frames)
+const MIN_PIPE_INTERVAL = 85;   // hard cap
+
+function getDifficulty(score: number) {
+  const t = Math.min(score / 30, 1); // ramp over 0~30 points
+  return {
+    gap: BASE_PIPE_GAP - (BASE_PIPE_GAP - MIN_PIPE_GAP) * t,
+    speed: BASE_PIPE_SPEED + (MAX_PIPE_SPEED - BASE_PIPE_SPEED) * t,
+    interval: Math.round(BASE_PIPE_INTERVAL - (BASE_PIPE_INTERVAL - MIN_PIPE_INTERVAL) * t),
+  };
+}
 
 interface Pipe {
   x: number;
   topH: number;
+  gap: number;
   scored: boolean;
 }
 
@@ -90,21 +105,23 @@ export default function FlappyGame() {
       }
 
       if (s.phase === "playing") {
+        const diff = getDifficulty(s.score);
+
         // Physics
         s.birdVel += GRAVITY;
         s.birdY += s.birdVel;
         s.frame++;
 
         // Spawn pipes
-        if (s.frame % PIPE_INTERVAL === 0) {
-          const topH = 60 + Math.random() * (H - PIPE_GAP - 120);
-          s.pipes.push({ x: W, topH, scored: false });
+        if (s.frame % diff.interval === 0) {
+          const topH = 60 + Math.random() * (H - diff.gap - 120);
+          s.pipes.push({ x: W, topH, gap: diff.gap, scored: false });
         }
 
         // Move pipes + collision + score
         for (let i = s.pipes.length - 1; i >= 0; i--) {
           const p = s.pipes[i];
-          p.x -= PIPE_SPEED;
+          p.x -= diff.speed;
 
           // Score
           if (!p.scored && p.x + PIPE_WIDTH < W / 4) {
@@ -125,7 +142,7 @@ export default function FlappyGame() {
           const birdB = s.birdY + BIRD_SIZE / 2;
 
           if (birdR > p.x && birdL < p.x + PIPE_WIDTH) {
-            if (birdT < p.topH || birdB > p.topH + PIPE_GAP) {
+            if (birdT < p.topH || birdB > p.topH + p.gap) {
               s.phase = "dead";
               setGameState("dead");
               setShowRanking(true);
@@ -163,7 +180,7 @@ export default function FlappyGame() {
         ctx.strokeRect(p.x, 0, PIPE_WIDTH, p.topH);
 
         // Bottom pipe
-        const botY = p.topH + PIPE_GAP;
+        const botY = p.topH + p.gap;
         ctx.fillStyle = "#1a1a2e";
         ctx.fillRect(p.x, botY, PIPE_WIDTH, H - botY);
         ctx.strokeStyle = "#2d2d4e";
