@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import ScoreBoard from "../../components/ScoreBoard";
 
 const W = 360;
 const H = 520;
@@ -23,6 +24,7 @@ export default function FlappyGame() {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [gameState, setGameState] = useState<"idle" | "playing" | "dead">("idle");
+  const [showRanking, setShowRanking] = useState(false);
 
   const stateRef = useRef({
     birdY: H / 2,
@@ -116,6 +118,7 @@ export default function FlappyGame() {
             if (birdT < p.topH || birdB > p.topH + PIPE_GAP) {
               s.dead = true;
               setGameState("dead");
+              setShowRanking(true);
               if (s.score > bestScore) {
                 setBestScore(s.score);
                 localStorage.setItem("flappy-best", String(s.score));
@@ -128,6 +131,7 @@ export default function FlappyGame() {
         if (s.birdY + BIRD_SIZE / 2 > H || s.birdY - BIRD_SIZE / 2 < 0) {
           s.dead = true;
           setGameState("dead");
+          setShowRanking(true);
           if (s.score > bestScore) {
             setBestScore(s.score);
             localStorage.setItem("flappy-best", String(s.score));
@@ -237,6 +241,8 @@ export default function FlappyGame() {
         <span>·</span>
         <span>클릭/터치 가능</span>
       </div>
+
+      <ScoreBoard gameId="flappy" currentScore={score} unit="점" show={showRanking} onClose={() => { setShowRanking(false); jump(); }} />
     </div>
   );
 }

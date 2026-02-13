@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { getOrCreateUser, setNickname as saveNickname, getUUID } from "../lib/user";
 
 const GAMES = [
   { href: "/fortune", label: "운세", emoji: "🎰" },
@@ -19,6 +20,17 @@ export default function NavBar() {
   const isHome = pathname === "/";
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLAnchorElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [nickname, setNickname] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [editValue, setEditValue] = useState("");
+
+  // Initialize user on mount
+  useEffect(() => {
+    const user = getOrCreateUser();
+    setNickname(user.nickname);
+  }, []);
 
   // Auto-scroll to active item
   useEffect(() => {
@@ -29,6 +41,42 @@ export default function NavBar() {
       container.scrollTo({ left, behavior: "smooth" });
     }
   }, [pathname]);
+
+  // Focus input on edit
+  useEffect(() => {
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editing]);
+
+  const startEdit = () => {
+    setEditValue(nickname);
+    setEditing(true);
+  };
+
+  const confirmEdit = async () => {
+    const trimmed = editValue.trim();
+    if (trimmed && trimmed !== nickname) {
+      saveNickname(trimmed);
+      setNickname(trimmed);
+
+      // Sync to Redis
+      const uuid = getUUID();
+      if (uuid) {
+        fetch("/api/scores", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ uuid, nickname: trimmed }),
+        }).catch(() => {}); // fire-and-forget
+      }
+    }
+    setEditing(false);
+  };
+
+  const cancelEdit = () => {
+    setEditing(false);
+  };
 
   return (
     <>
@@ -43,15 +91,56 @@ export default function NavBar() {
             <span className="text-zinc-400">dev-playground</span>
           </Link>
 
-          {!isHome && (
+          <div className="flex items-center gap-1.5">
+            {/* Nickname badge */}
+            {!editing ? (
+              <button
+                onClick={startEdit}
+                className="flex items-center gap-1 rounded-lg border border-card-border bg-card-bg/70 px-2.5 py-1.5 font-mono text-[11px] text-zinc-400 backdrop-blur-xl transition-all hover:border-zinc-600 hover:text-zinc-200"
+                title="닉네임 수정"
+              >
+                <span className="max-w-[80px] truncate">{nickname}</span>
+                <span className="text-[9px] text-zinc-600">✏️</span>
+              </button>
+            ) : (
+              <div className="flex items-center gap-1">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  maxLength={20}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") confirmEdit();
+                    if (e.key === "Escape") cancelEdit();
+                  }}
+                  onBlur={confirmEdit}
+                  className="w-[120px] rounded-lg border border-accent/40 bg-zinc-900/90 px-2.5 py-1.5 font-mono text-[11px] text-white outline-none backdrop-blur-xl"
+                />
+              </div>
+            )}
+
             <Link
-              href="/"
-              className="flex items-center gap-1.5 rounded-lg border border-card-border bg-card-bg/70 px-3 py-1.5 font-mono text-[11px] text-zinc-500 backdrop-blur-xl transition-all hover:border-zinc-600 hover:text-zinc-200"
+              href="/ranking"
+              className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 font-mono text-[11px] backdrop-blur-xl transition-all ${
+                pathname === "/ranking"
+                  ? "border-amber-500/40 bg-amber-500/10 text-amber-400"
+                  : "border-card-border bg-card-bg/70 text-zinc-500 hover:border-zinc-600 hover:text-zinc-200"
+              }`}
             >
-              <span className="text-xs">🏠</span>
-              <span>전체 보기</span>
+              <span className="text-xs">🏆</span>
+              <span className="hidden sm:inline">랭킹</span>
             </Link>
-          )}
+            {!isHome && (
+              <Link
+                href="/"
+                className="flex items-center gap-1.5 rounded-lg border border-card-border bg-card-bg/70 px-3 py-1.5 font-mono text-[11px] text-zinc-500 backdrop-blur-xl transition-all hover:border-zinc-600 hover:text-zinc-200"
+              >
+                <span className="text-xs">🏠</span>
+                <span className="hidden sm:inline">홈</span>
+              </Link>
+            )}
+          </div>
         </div>
       </nav>
 

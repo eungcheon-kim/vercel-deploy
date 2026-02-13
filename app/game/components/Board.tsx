@@ -12,6 +12,7 @@ import {
   type Direction,
 } from "../lib/gameLogic";
 import Tile from "./Tile";
+import ScoreBoard from "../../components/ScoreBoard";
 
 const CELL_SIZE = 80;
 const GAP = 10;
@@ -26,6 +27,7 @@ export default function Board() {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [keepPlaying, setKeepPlaying] = useState(false);
+  const [showRanking, setShowRanking] = useState(false);
   const [ready, setReady] = useState(false);
   const movingRef = useRef(false);
 
@@ -87,6 +89,7 @@ export default function Board() {
           }
           if (isGameOver(withNew)) {
             setGameOver(true);
+            setShowRanking(true);
           }
 
           return withNew;
@@ -264,6 +267,9 @@ export default function Board() {
         </div>
         <span>or swipe to move</span>
       </div>
+
+      {/* Scoreboard */}
+      <ScoreBoard gameId="2048" currentScore={score} unit="점" show={showRanking} onClose={() => { setShowRanking(false); startNewGame(); }} />
     </div>
   );
 }

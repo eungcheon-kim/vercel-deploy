@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Matter from "matter-js";
 import { FRUITS, getNextDropLevel, type FruitDef } from "../lib/fruits";
+import ScoreBoard from "../../components/ScoreBoard";
 
 const GAME_WIDTH = 360;
 const GAME_HEIGHT = 560;
@@ -34,6 +35,7 @@ export default function SuikaGame() {
   const [nextLevel, setNextLevel] = useState(nextLevelRef.current);
   const [gameOver, setGameOver] = useState(false);
   const [bestScore, setBestScore] = useState(0);
+  const [showRanking, setShowRanking] = useState(false);
 
   // Initialize engine
   useEffect(() => {
@@ -128,6 +130,7 @@ export default function SuikaGame() {
           if (f.body.position.y - FRUITS[f.level].radius < DEAD_LINE_Y && f.body.speed < 1) {
             gameOverRef.current = true;
             setGameOver(true);
+            setShowRanking(true);
             // Save best
             if (scoreRef.current > bestScore) {
               setBestScore(scoreRef.current);
@@ -417,6 +420,9 @@ export default function SuikaGame() {
         <span>·</span>
         <span>클릭/터치 가능</span>
       </div>
+
+      {/* Scoreboard */}
+      <ScoreBoard gameId="suika" currentScore={score} unit="점" show={showRanking} onClose={() => { setShowRanking(false); restartGame(); }} />
     </div>
   );
 }

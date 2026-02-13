@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo, useRef } from "react";
+import ScoreBoard from "../../components/ScoreBoard";
 
 const ROWS = 10;
 const COLS = 10;
@@ -93,6 +94,7 @@ export default function MineGame() {
   const [gameState, setGameState] = useState<"idle" | "playing" | "won" | "lost">("idle");
   const [time, setTime] = useState(0);
   const [timerRef, setTimerRef] = useState<ReturnType<typeof setInterval> | null>(null);
+  const [showRanking, setShowRanking] = useState(false);
 
   // Track which buttons are currently pressed for chording
   const pressedButtonsRef = useRef(new Set<number>());
@@ -190,6 +192,7 @@ export default function MineGame() {
 
       if (checkWin(b)) {
         setGameState("won");
+        setShowRanking(true);
         stopTimer();
       }
       setBoard(b);
@@ -233,6 +236,7 @@ export default function MineGame() {
 
       if (checkWin(b)) {
         setGameState("won");
+        setShowRanking(true);
         stopTimer();
       }
 
@@ -401,16 +405,33 @@ export default function MineGame() {
       </div>
 
       {gameState === "won" && (
-        <div className="rounded-xl border border-green-500/30 bg-green-500/10 px-6 py-3 text-center">
-          <p className="font-mono text-sm font-bold text-green-400">클리어! 🎉</p>
-          <p className="font-mono text-xs text-zinc-400">{time}초 만에 해결!</p>
-        </div>
+        <>
+          <div className="rounded-xl border border-green-500/30 bg-green-500/10 px-6 py-3 text-center">
+            <p className="font-mono text-sm font-bold text-green-400">클리어! 🎉</p>
+            <p className="font-mono text-xs text-zinc-400">{time}초 만에 해결!</p>
+          </div>
+          <button
+            onClick={restart}
+            className="rounded-xl border border-card-border bg-card-bg px-5 py-2 font-mono text-xs text-zinc-400 transition-all hover:border-accent/30 hover:text-white"
+          >
+            다시 하기
+          </button>
+          <ScoreBoard gameId="mine" currentScore={time} unit="초" show={showRanking} onClose={() => { setShowRanking(false); restart(); }} />
+        </>
       )}
       {gameState === "lost" && (
-        <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-6 py-3 text-center">
-          <p className="font-mono text-sm font-bold text-red-400">💥 지뢰를 밟았습니다!</p>
-          <p className="font-mono text-xs text-zinc-400">이모지 버튼을 눌러 재시작</p>
-        </div>
+        <>
+          <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-6 py-3 text-center">
+            <p className="font-mono text-sm font-bold text-red-400">💥 지뢰를 밟았습니다!</p>
+            <p className="font-mono text-xs text-zinc-400">아래 버튼으로 재시작</p>
+          </div>
+          <button
+            onClick={restart}
+            className="rounded-xl border border-card-border bg-card-bg px-5 py-2 font-mono text-xs text-zinc-400 transition-all hover:border-accent/30 hover:text-white"
+          >
+            다시 하기
+          </button>
+        </>
       )}
 
       <div className="flex flex-col items-center gap-1 font-mono text-[10px] text-zinc-600">

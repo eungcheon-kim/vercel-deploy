@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import ScoreBoard from "../../components/ScoreBoard";
 
 const COLS = 20;
 const ROWS = 20;
@@ -18,6 +19,7 @@ export default function SnakeGame() {
   const [gameState, setGameState] = useState<"idle" | "playing" | "dead">("idle");
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
+  const [showRanking, setShowRanking] = useState(false);
 
   const dirRef = useRef<Dir>("RIGHT");
   const snakeRef = useRef(snake);
@@ -110,6 +112,7 @@ export default function SnakeGame() {
       // Wall collision
       if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
         setGameState("dead");
+        setShowRanking(true);
         const sc = snk.length - 1;
         if (sc > bestScore) {
           setBestScore(sc);
@@ -121,6 +124,7 @@ export default function SnakeGame() {
       // Self collision
       if (snk.some((p) => p.x === head.x && p.y === head.y)) {
         setGameState("dead");
+        setShowRanking(true);
         const sc = snk.length - 1;
         if (sc > bestScore) {
           setBestScore(sc);
@@ -258,6 +262,8 @@ export default function SnakeGame() {
         <span>·</span>
         <span>WASD / 스와이프 가능</span>
       </div>
+
+      <ScoreBoard gameId="snake" currentScore={score} unit="점" show={showRanking} onClose={() => { setShowRanking(false); restart(); }} />
     </div>
   );
 }

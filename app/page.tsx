@@ -71,6 +71,16 @@ const APPS = [
     border: "hover:border-red-500/40",
     glow: "group-hover:shadow-[0_0_40px_-10px_rgba(239,68,68,0.3)]",
   },
+  {
+    href: "/ranking",
+    emoji: "🏆",
+    title: "랭킹보드",
+    description: "각 게임별 Top 10 랭킹을 확인하세요! 누가 제일 잘할까?",
+    tag: "스코어 · 순위",
+    gradient: "from-amber-500/20 via-yellow-500/10 to-orange-500/20",
+    border: "hover:border-amber-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(245,158,11,0.3)]",
+  },
 ];
 
 export default function Home() {

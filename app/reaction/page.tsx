@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import ScoreBoard from "../components/ScoreBoard";
 
 type Phase = "ready" | "waiting" | "go" | "result" | "toosoon";
 
 export default function ReactionPage() {
   const [phase, setPhase] = useState<Phase>("ready");
   const [reactionTime, setReactionTime] = useState(0);
-  const [times, setTimes] = useState<number[]>([]);
   const [bestTime, setBestTime] = useState(0);
+  const [showRanking, setShowRanking] = useState(false);
   const startTimeRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -18,7 +19,7 @@ export default function ReactionPage() {
   }, []);
 
   const handleClick = useCallback(() => {
-    if (phase === "ready" || phase === "result" || phase === "toosoon") {
+    if (phase === "ready" || phase === "toosoon") {
       // Start waiting
       setPhase("waiting");
       const delay = 1500 + Math.random() * 3500; // 1.5~5s
@@ -34,22 +35,18 @@ export default function ReactionPage() {
       // Record time
       const elapsed = Math.round(performance.now() - startTimeRef.current);
       setReactionTime(elapsed);
-      const newTimes = [...times, elapsed];
-      setTimes(newTimes);
 
       if (bestTime === 0 || elapsed < bestTime) {
         setBestTime(elapsed);
         localStorage.setItem("reaction-best", String(elapsed));
       }
 
+      setShowRanking(true);
       setPhase("result");
     }
-  }, [phase, times, bestTime]);
-
-  const avg = times.length > 0 ? Math.round(times.reduce((a, b) => a + b, 0) / times.length) : 0;
+  }, [phase, bestTime]);
 
   const reset = () => {
-    setTimes([]);
     setPhase("ready");
     setReactionTime(0);
   };
@@ -78,19 +75,18 @@ export default function ReactionPage() {
             <span className="font-mono text-lg font-bold text-gold">{bestTime ? `${bestTime}ms` : "-"}</span>
           </div>
           <div className="flex flex-col items-center rounded-xl border border-card-border bg-card-bg px-4 py-2">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">Avg</span>
-            <span className="font-mono text-lg font-bold text-white">{avg ? `${avg}ms` : "-"}</span>
-          </div>
-          <div className="flex flex-col items-center rounded-xl border border-card-border bg-card-bg px-4 py-2">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">Round</span>
-            <span className="font-mono text-lg font-bold text-white">{times.length}/5</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">Last</span>
+            <span className="font-mono text-lg font-bold text-white">{reactionTime ? `${reactionTime}ms` : "-"}</span>
           </div>
         </div>
 
         {/* Game Area */}
         <button
           onClick={handleClick}
-          className={`flex h-72 w-full max-w-md cursor-pointer select-none flex-col items-center justify-center rounded-3xl border-2 text-center font-mono transition-all duration-100 ${
+          disabled={phase === "result"}
+          className={`flex h-72 w-full max-w-md select-none flex-col items-center justify-center rounded-3xl border-2 text-center font-mono transition-all duration-100 ${
+            phase === "result" ? "cursor-default" : "cursor-pointer"
+          } ${
             phase === "ready"
               ? "border-accent/30 bg-accent/5 text-zinc-400 hover:border-accent/50"
               : phase === "waiting"
@@ -138,28 +134,11 @@ export default function ReactionPage() {
               <span className="mt-2 text-sm text-zinc-400">
                 {reactionTime < 150 ? "미쳤다 🔥" : reactionTime < 200 ? "엄청 빠름!" : reactionTime < 250 ? "좋아요!" : reactionTime < 350 ? "평균적" : "조금 느림..."}
               </span>
-              <span className="mt-2 text-xs text-zinc-600">클릭해서 계속</span>
             </>
           )}
         </button>
 
-        {/* History */}
-        {times.length > 0 && (
-          <div className="mt-6 flex flex-col items-center gap-2">
-            <div className="flex gap-2">
-              {times.map((t, i) => (
-                <span key={i} className={`rounded-lg border border-card-border bg-card-bg px-3 py-1 font-mono text-xs ${t < 200 ? "text-green-400" : t < 300 ? "text-yellow-400" : "text-orange-400"}`}>
-                  {t}ms
-                </span>
-              ))}
-            </div>
-            {times.length >= 5 && (
-              <button onClick={reset} className="mt-2 rounded-xl border border-card-border bg-card-bg px-4 py-2 font-mono text-xs text-zinc-400 transition-all hover:border-accent/30 hover:text-white">
-                다시 하기
-              </button>
-            )}
-          </div>
-        )}
+        <ScoreBoard gameId="reaction" currentScore={reactionTime} unit="ms" show={showRanking} onClose={() => { setShowRanking(false); reset(); }} />
       </main>
     </div>
   );
