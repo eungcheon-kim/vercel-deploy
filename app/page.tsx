@@ -32,14 +32,44 @@ const APPS = [
     glow: "group-hover:shadow-[0_0_40px_-10px_rgba(34,197,94,0.3)]",
   },
   {
-    href: null,
-    emoji: "🚧",
-    title: "Coming Soon",
-    description: "새로운 콘텐츠를 준비 중입니다. 기대해주세요!",
-    tag: "준비 중",
-    gradient: "from-zinc-500/10 to-zinc-600/10",
-    border: "",
-    glow: "",
+    href: "/reaction",
+    emoji: "⚡",
+    title: "반응속도 테스트",
+    description: "초록불이 켜지면 최대한 빨리 클릭! 당신의 반응속도는 몇 ms?",
+    tag: "반응 · 측정",
+    gradient: "from-cyan-500/20 via-sky-500/10 to-blue-500/20",
+    border: "hover:border-cyan-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.3)]",
+  },
+  {
+    href: "/flappy",
+    emoji: "🐤",
+    title: "플래피 버드",
+    description: "클릭으로 점프하며 파이프를 피하세요! 간단하지만 중독성 있는 게임.",
+    tag: "아케이드 · 원터치",
+    gradient: "from-yellow-500/20 via-amber-500/10 to-orange-500/20",
+    border: "hover:border-yellow-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(234,179,8,0.3)]",
+  },
+  {
+    href: "/snake",
+    emoji: "🐍",
+    title: "스네이크",
+    description: "먹이를 먹고 점점 커지는 뱀! 벽과 자기 몸을 피하세요.",
+    tag: "클래식 · 방향키",
+    gradient: "from-emerald-500/20 via-green-500/10 to-lime-500/20",
+    border: "hover:border-emerald-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(16,185,129,0.3)]",
+  },
+  {
+    href: "/mine",
+    emoji: "💣",
+    title: "지뢰찾기",
+    description: "지뢰를 피해 모든 칸을 열어보세요! 우클릭으로 깃발을 꽂으세요.",
+    tag: "전략 · 퍼즐",
+    gradient: "from-red-500/20 via-rose-500/10 to-pink-500/20",
+    border: "hover:border-red-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(239,68,68,0.3)]",
   },
 ];
 
@@ -84,7 +114,7 @@ export default function Home() {
         </div>
 
         {/* App Cards */}
-        <div className="grid w-full max-w-2xl gap-4 sm:grid-cols-2">
+        <div className="grid w-full max-w-3xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {APPS.map((app, i) => {
             const inner = (
               <div
@@ -140,7 +170,7 @@ export default function Home() {
         {/* Footer */}
         <footer
           className="anim-fade-up mt-20 flex flex-col items-center gap-2"
-          style={{ animationDelay: "0.6s" }}
+          style={{ animationDelay: "1s" }}
         >
           <div className="flex items-center gap-3 font-mono text-[10px] text-zinc-700">
             <span>Built with Next.js</span>

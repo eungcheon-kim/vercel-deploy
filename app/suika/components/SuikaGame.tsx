@@ -350,67 +350,68 @@ export default function SuikaGame() {
   const nextFruit = FRUITS[nextLevel];
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      {/* Score + Next */}
+    <div className="flex h-full flex-col items-center gap-2">
+      {/* Score + Next — compact */}
       <div className="flex w-full max-w-[360px] items-center justify-between">
-        <div className="flex gap-3">
-          <div className="flex flex-col items-center rounded-xl border border-card-border bg-card-bg px-4 py-2">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">Score</span>
-            <span className="font-mono text-lg font-bold text-white">{score}</span>
+        <div className="flex gap-2">
+          <div className="flex items-center gap-1.5 rounded-lg border border-card-border bg-card-bg px-3 py-1.5">
+            <span className="font-mono text-[9px] uppercase text-zinc-500">Score</span>
+            <span className="font-mono text-sm font-bold text-white">{score}</span>
           </div>
-          <div className="flex flex-col items-center rounded-xl border border-card-border bg-card-bg px-4 py-2">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">Best</span>
-            <span className="font-mono text-lg font-bold text-gold">{bestScore}</span>
+          <div className="flex items-center gap-1.5 rounded-lg border border-card-border bg-card-bg px-3 py-1.5">
+            <span className="font-mono text-[9px] uppercase text-zinc-500">Best</span>
+            <span className="font-mono text-sm font-bold text-gold">{bestScore}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex flex-col items-center rounded-xl border border-card-border bg-card-bg px-3 py-2">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">Next</span>
-            <span className="text-xl">{nextFruit.emoji}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 rounded-lg border border-card-border bg-card-bg px-2.5 py-1.5">
+            <span className="font-mono text-[9px] uppercase text-zinc-500">Next</span>
+            <span className="text-base">{nextFruit.emoji}</span>
           </div>
           <button
             onClick={restartGame}
-            className="rounded-xl border border-card-border bg-card-bg px-3 py-2 font-mono text-xs text-zinc-400 transition-all hover:border-accent/30 hover:text-white"
+            className="rounded-lg border border-card-border bg-card-bg px-2.5 py-1.5 font-mono text-xs text-zinc-400 transition-all hover:border-accent/30 hover:text-white"
           >
             ↺
           </button>
         </div>
       </div>
 
-      {/* Canvas */}
-      <canvas
-        ref={canvasRef}
-        width={GAME_WIDTH}
-        height={GAME_HEIGHT}
-        className="w-full max-w-[360px] cursor-crosshair rounded-2xl border border-card-border"
-        onPointerMove={handlePointerMove}
-        onPointerDown={handlePointerDown}
-        style={{ touchAction: "none" }}
-      />
+      {/* Canvas — fills remaining height */}
+      <div className="relative min-h-0 w-full max-w-[360px] flex-1">
+        <canvas
+          ref={canvasRef}
+          width={GAME_WIDTH}
+          height={GAME_HEIGHT}
+          className="h-full w-full cursor-crosshair rounded-2xl border border-card-border object-contain"
+          onPointerMove={handlePointerMove}
+          onPointerDown={handlePointerDown}
+          style={{ touchAction: "none" }}
+        />
+      </div>
 
-      {/* Legend */}
-      <div className="flex flex-wrap justify-center gap-1.5">
+      {/* Fruit legend — compact scrollable row */}
+      <div className="flex w-full max-w-[360px] items-center gap-1 overflow-x-auto scrollbar-none">
         {FRUITS.map((f) => (
           <div
             key={f.level}
-            className="flex items-center gap-1 rounded-md border border-card-border bg-card-bg px-2 py-0.5"
+            className="flex shrink-0 items-center gap-0.5 rounded-md border border-card-border bg-card-bg px-1.5 py-0.5"
           >
-            <span className="text-xs">{f.emoji}</span>
-            <span className="font-mono text-[9px] text-zinc-600">{f.label}</span>
+            <span className="text-[10px]">{f.emoji}</span>
+            <span className="font-mono text-[8px] text-zinc-600">{f.label}</span>
           </div>
         ))}
       </div>
 
-      {/* Hint */}
-      <div className="flex items-center gap-3 font-mono text-[10px] text-zinc-600">
+      {/* Controls hint */}
+      <div className="flex items-center gap-2 font-mono text-[9px] text-zinc-600">
         <div className="flex items-center gap-1">
-          <kbd className="rounded border border-zinc-700 bg-zinc-800 px-1.5 py-0.5 text-zinc-400">←</kbd>
-          <kbd className="rounded border border-zinc-700 bg-zinc-800 px-1.5 py-0.5 text-zinc-400">→</kbd>
+          <kbd className="rounded border border-zinc-700 bg-zinc-800 px-1 py-0.5 text-zinc-400">←→</kbd>
           <span>이동</span>
         </div>
         <div className="flex items-center gap-1">
-          <kbd className="rounded border border-zinc-700 bg-zinc-800 px-1.5 py-0.5 text-zinc-400">Space</kbd>
+          <kbd className="rounded border border-zinc-700 bg-zinc-800 px-1 py-0.5 text-zinc-400">Space</kbd>
           <span>드롭</span>
         </div>
         <span>·</span>

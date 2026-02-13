@@ -12,7 +12,7 @@ export default function FortunePage() {
       <div className="orb orb-2" />
       <div className="orb orb-3" />
 
-      <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 pt-20 pb-16">
+      <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 pt-20 pb-24">
         {/* Header */}
         <div className="mb-12 flex flex-col items-center gap-4 text-center">
           <div className="anim-fade-up flex items-center gap-2 rounded-full border border-card-border bg-card-bg/60 px-4 py-1.5 backdrop-blur-sm">

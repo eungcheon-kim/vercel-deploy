@@ -12,7 +12,7 @@ export default function GamePage() {
       <div className="orb orb-2" />
       <div className="orb orb-3" />
 
-      <main className="relative z-10 flex min-h-screen flex-col items-center px-6 pt-16 pb-10">
+      <main className="relative z-10 flex min-h-screen flex-col items-center px-6 pt-16 pb-24">
         {/* Title */}
         <div className="mb-8 flex flex-col items-center gap-2 text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
