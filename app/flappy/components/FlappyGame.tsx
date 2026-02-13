@@ -6,12 +6,12 @@ import ScoreBoard from "../../components/ScoreBoard";
 const W = 360;
 const H = 520;
 const BIRD_SIZE = 20;
-const GRAVITY = 0.35;
-const JUMP = -6.5;
+const GRAVITY = 0.3;
+const JUMP = -6;
 const PIPE_WIDTH = 50;
-const PIPE_GAP = 140;
-const PIPE_SPEED = 2.2;
-const PIPE_INTERVAL = 110; // frames
+const PIPE_GAP = 170;
+const PIPE_SPEED = 1.8;
+const PIPE_INTERVAL = 130; // frames
 
 interface Pipe {
   x: number;
@@ -23,7 +23,7 @@ export default function FlappyGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
-  const [gameState, setGameState] = useState<"idle" | "playing" | "dead">("idle");
+  const [gameState, setGameState] = useState<"idle" | "ready" | "playing" | "dead">("idle");
   const [showRanking, setShowRanking] = useState(false);
 
   const stateRef = useRef({
@@ -32,8 +32,7 @@ export default function FlappyGame() {
     pipes: [] as Pipe[],
     frame: 0,
     score: 0,
-    playing: false,
-    dead: false,
+    phase: "idle" as "idle" | "ready" | "playing" | "dead",
   });
 
   useEffect(() => {
@@ -43,21 +42,27 @@ export default function FlappyGame() {
 
   const jump = useCallback(() => {
     const s = stateRef.current;
-    if (s.dead) {
-      // Reset
+    if (s.phase === "dead") {
+      // Reset → go to ready
       s.birdY = H / 2;
       s.birdVel = 0;
       s.pipes = [];
       s.frame = 0;
       s.score = 0;
-      s.dead = false;
-      s.playing = true;
+      s.phase = "ready";
       setScore(0);
-      setGameState("playing");
+      setGameState("ready");
       return;
     }
-    if (!s.playing) {
-      s.playing = true;
+    if (s.phase === "idle") {
+      // First click → ready (bird floats, waiting for start)
+      s.phase = "ready";
+      setGameState("ready");
+      return;
+    }
+    if (s.phase === "ready") {
+      // Second click → start playing
+      s.phase = "playing";
       setGameState("playing");
     }
     s.birdVel = JUMP;
@@ -79,7 +84,12 @@ export default function FlappyGame() {
     const loop = () => {
       const s = stateRef.current;
 
-      if (s.playing && !s.dead) {
+      // Ready state: bird bobs gently in place
+      if (s.phase === "ready") {
+        s.birdY = H / 2 + Math.sin(Date.now() / 300) * 8;
+      }
+
+      if (s.phase === "playing") {
         // Physics
         s.birdVel += GRAVITY;
         s.birdY += s.birdVel;
@@ -116,7 +126,7 @@ export default function FlappyGame() {
 
           if (birdR > p.x && birdL < p.x + PIPE_WIDTH) {
             if (birdT < p.topH || birdB > p.topH + PIPE_GAP) {
-              s.dead = true;
+              s.phase = "dead";
               setGameState("dead");
               setShowRanking(true);
               if (s.score > bestScore) {
@@ -129,7 +139,7 @@ export default function FlappyGame() {
 
         // Floor / ceiling
         if (s.birdY + BIRD_SIZE / 2 > H || s.birdY - BIRD_SIZE / 2 < 0) {
-          s.dead = true;
+          s.phase = "dead";
           setGameState("dead");
           setShowRanking(true);
           if (s.score > bestScore) {
@@ -178,20 +188,31 @@ export default function FlappyGame() {
       ctx.fillText(String(s.score), W / 2, 60);
 
       // Idle
-      if (!s.playing && !s.dead) {
+      if (s.phase === "idle") {
         ctx.fillStyle = "rgba(0,0,0,0.3)";
         ctx.fillRect(0, 0, W, H);
         ctx.font = "bold 22px var(--font-geist-mono), monospace";
         ctx.fillStyle = "#fff";
         ctx.textAlign = "center";
-        ctx.fillText("클릭 / Space로 시작", W / 2, H / 2);
+        ctx.fillText("클릭해서 준비", W / 2, H / 2);
         ctx.font = "12px var(--font-geist-mono), monospace";
         ctx.fillStyle = "#71717a";
         ctx.fillText("클릭 or Space = 점프", W / 2, H / 2 + 30);
       }
 
+      // Ready — waiting to start
+      if (s.phase === "ready") {
+        ctx.font = "bold 20px var(--font-geist-mono), monospace";
+        ctx.fillStyle = "rgba(255,255,255,0.9)";
+        ctx.textAlign = "center";
+        ctx.fillText("클릭하면 시작!", W / 2, H / 3);
+        ctx.font = "12px var(--font-geist-mono), monospace";
+        ctx.fillStyle = "#71717a";
+        ctx.fillText("Space / 클릭 = 점프", W / 2, H / 3 + 28);
+      }
+
       // Dead
-      if (s.dead) {
+      if (s.phase === "dead") {
         ctx.fillStyle = "rgba(0,0,0,0.5)";
         ctx.fillRect(0, 0, W, H);
         ctx.font = "bold 28px var(--font-geist-mono), monospace";
@@ -242,7 +263,18 @@ export default function FlappyGame() {
         <span>클릭/터치 가능</span>
       </div>
 
-      <ScoreBoard gameId="flappy" currentScore={score} unit="점" show={showRanking} onClose={() => { setShowRanking(false); jump(); }} />
+      <ScoreBoard gameId="flappy" currentScore={score} unit="점" show={showRanking} onClose={() => {
+        setShowRanking(false);
+        const s = stateRef.current;
+        s.birdY = H / 2;
+        s.birdVel = 0;
+        s.pipes = [];
+        s.frame = 0;
+        s.score = 0;
+        s.phase = "ready";
+        setScore(0);
+        setGameState("ready");
+      }} />
     </div>
   );
 }
