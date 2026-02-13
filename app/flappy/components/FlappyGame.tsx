@@ -38,6 +38,7 @@ export default function FlappyGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
+  const [finalScore, setFinalScore] = useState(0);
   const [gameState, setGameState] = useState<"idle" | "ready" | "playing" | "dead">("idle");
   const [showRanking, setShowRanking] = useState(false);
 
@@ -145,6 +146,7 @@ export default function FlappyGame() {
             if (birdT < p.topH || birdB > p.topH + p.gap) {
               s.phase = "dead";
               setGameState("dead");
+              setFinalScore(s.score);
               setShowRanking(true);
               if (s.score > bestScore) {
                 setBestScore(s.score);
@@ -158,6 +160,7 @@ export default function FlappyGame() {
         if (s.birdY + BIRD_SIZE / 2 > H || s.birdY - BIRD_SIZE / 2 < 0) {
           s.phase = "dead";
           setGameState("dead");
+          setFinalScore(s.score);
           setShowRanking(true);
           if (s.score > bestScore) {
             setBestScore(s.score);
@@ -280,7 +283,7 @@ export default function FlappyGame() {
         <span>클릭/터치 가능</span>
       </div>
 
-      <ScoreBoard gameId="flappy" currentScore={score} unit="점" show={showRanking} onClose={() => {
+      <ScoreBoard gameId="flappy" currentScore={finalScore} unit="점" show={showRanking} onClose={() => {
         setShowRanking(false);
         const s = stateRef.current;
         s.birdY = H / 2;
