@@ -20,6 +20,20 @@ const BOARD_PADDING = GAP;
 const BOARD_SIZE = GRID_SIZE * CELL_SIZE + (GRID_SIZE + 1) * GAP;
 const SWIPE_THRESHOLD = 30;
 
+function useBoardScale() {
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const calc = () => {
+      const maxW = window.innerWidth - 32; // 16px padding each side
+      setScale(maxW < BOARD_SIZE ? maxW / BOARD_SIZE : 1);
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, []);
+  return scale;
+}
+
 export default function Board() {
   const [tiles, setTiles] = useState<TileData[]>([]);
   const [score, setScore] = useState(0);
@@ -130,6 +144,13 @@ export default function Board() {
     touchStartRef.current = { x: touch.clientX, y: touch.clientY };
   }, []);
 
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    // Prevent scroll & pull-to-refresh while swiping on the board
+    if (touchStartRef.current) {
+      e.preventDefault();
+    }
+  }, []);
+
   const handleTouchEnd = useCallback(
     (e: React.TouchEvent) => {
       if (!touchStartRef.current) return;
@@ -152,10 +173,12 @@ export default function Board() {
     [handleMove]
   );
 
+  const boardScale = useBoardScale();
+
   return (
     <div className="flex flex-col items-center gap-6">
       {/* Score Bar */}
-      <div className="flex w-full max-w-[370px] items-center justify-between">
+      <div className="flex w-full max-w-[370px] items-center justify-between" style={boardScale < 1 ? { maxWidth: `${BOARD_SIZE * boardScale}px` } : undefined}>
         <div className="flex gap-3">
           <div className="flex flex-col items-center rounded-xl border border-card-border bg-card-bg px-5 py-2">
             <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">
@@ -180,13 +203,17 @@ export default function Board() {
       </div>
 
       {/* Board */}
+      <div style={{ width: `${BOARD_SIZE * boardScale}px`, height: `${BOARD_SIZE * boardScale}px` }}>
       <div
-        className="relative overflow-hidden rounded-2xl border border-card-border bg-card-bg/80 backdrop-blur-sm"
+        className="relative origin-top-left overflow-hidden rounded-2xl border border-card-border bg-card-bg/80 backdrop-blur-sm"
         style={{
           width: `${BOARD_SIZE}px`,
           height: `${BOARD_SIZE}px`,
+          touchAction: "none",
+          transform: `scale(${boardScale})`,
         }}
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
         {/* Grid background cells */}
@@ -255,6 +282,7 @@ export default function Board() {
             </div>
           </div>
         )}
+      </div>
       </div>
 
       {/* Controls hint */}

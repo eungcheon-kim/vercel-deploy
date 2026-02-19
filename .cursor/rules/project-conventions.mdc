@@ -1,0 +1,46 @@
+---
+description: Dev Playground 프로젝트 전반 컨벤션. 항상 적용.
+alwaysApply: true
+---
+
+# Dev Playground 프로젝트 컨벤션
+
+## 기술 스택
+- Next.js (App Router) + React 19 + TypeScript
+- Tailwind CSS v4 (PostCSS)
+- pnpm (패키지 매니저)
+- Upstash Redis (랭킹 시스템)
+- Vercel 배포
+
+## 프로젝트 구조
+```
+app/
+  page.tsx              # 허브 페이지 (APPS 배열)
+  layout.tsx            # 루트 레이아웃 (NavBar 포함)
+  globals.css           # 전역 스타일 + 애니메이션
+  components/           # 공용 컴포넌트 (NavBar, ScoreBoard)
+  lib/                  # 유틸 (redis.ts, user.ts)
+  api/scores/route.ts   # 랭킹 API (GET/POST/PATCH)
+  [game]/               # 각 게임 폴더
+    page.tsx            # 게임 페이지 (metadata 포함)
+    components/         # 게임 컴포넌트
+    lib/                # 게임 로직
+```
+
+## 코드 스타일
+- 한국어 UI, 영어 코드/변수명
+- `"use client"` 게임 컴포넌트에만 사용, 페이지는 가능한 서버 컴포넌트
+- 게임 상태는 `useRef` (실시간 루프), UI 표시는 `useState`
+- Canvas 게임: `requestAnimationFrame` 루프
+- DOM 게임: React state 기반 렌더링
+
+## 랭킹 시스템
+- UUID (`localStorage`) 기반 유저 식별
+- ScoreBoard 컴포넌트: `gameId`, `currentScore`, `unit`, `show`, `onClose` props
+- API: Redis Sorted Set, "asc" 게임은 음수 저장, 유저당 최고 기록만 유지
+- 닉네임은 NavBar에서만 수정 (PATCH /api/scores)
+
+## 모바일 대응
+- 게임 영역에 `touchAction: "none"` 필수
+- 스와이프 게임은 `onTouchMove`에서 `preventDefault()`
+- `overscroll-none`으로 pull-to-refresh 방지

@@ -1,0 +1,44 @@
+---
+description: 게임 컴포넌트 작성 패턴. 게임 관련 파일 수정 시 적용.
+globs: app/**/components/*Game*.tsx,app/**/components/*Board*.tsx
+alwaysApply: false
+---
+
+# 게임 컴포넌트 패턴
+
+## 필수 구조
+```tsx
+"use client";
+import ScoreBoard from "../../components/ScoreBoard";
+
+export default function MyGame() {
+  const [score, setScore] = useState(0);
+  const [showRanking, setShowRanking] = useState(false);
+
+  // 게임 종료 시
+  setShowRanking(true);
+
+  return (
+    <div>
+      {/* 게임 UI */}
+      <ScoreBoard
+        gameId="my-game"
+        currentScore={score}
+        unit="점"
+        show={showRanking}
+        onClose={() => { setShowRanking(false); restart(); }}
+      />
+    </div>
+  );
+}
+```
+
+## 점수 동기화 주의
+- `requestAnimationFrame` 루프에서 죽을 때 `setScore`와 `setShowRanking`이 동시에 불리면 React 배치로 인해 ScoreBoard에 이전 점수가 전달될 수 있음
+- **해결**: `finalScore` state를 별도로 두고 죽는 시점에 ref에서 직접 저장
+
+## 게임 등록 체크리스트
+1. `app/lib/redis.ts` GAME_CONFIG에 gameId 추가
+2. `app/components/NavBar.tsx` GAMES 배열에 추가
+3. `app/page.tsx` APPS 배열에 카드 추가
+4. `app/ranking/page.tsx` GAMES 배열에 추가

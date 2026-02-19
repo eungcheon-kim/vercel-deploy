@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function GamePage() {
   return (
-    <div className="noise grid-bg relative min-h-screen">
+    <div className="noise grid-bg relative min-h-screen overscroll-none">
       <div className="orb orb-1" />
       <div className="orb orb-2" />
       <div className="orb orb-3" />
