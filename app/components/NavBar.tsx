@@ -13,6 +13,13 @@ const GAMES = [
   { href: "/flappy", label: "플래피", emoji: "🐤" },
   { href: "/snake", label: "뱀", emoji: "🐍" },
   { href: "/mine", label: "지뢰", emoji: "💣" },
+  { href: "/memory", label: "메모리", emoji: "🃏" },
+  { href: "/colormatch", label: "컬러", emoji: "🎨" },
+  { href: "/aim", label: "에임", emoji: "🎯" },
+  { href: "/maze", label: "미로", emoji: "🏁" },
+  { href: "/sudoku", label: "스도쿠", emoji: "🔢" },
+  { href: "/typing", label: "타이핑", emoji: "⌨️" },
+  { href: "/wordle", label: "워들", emoji: "🟩" },
 ];
 
 const TOOLS = [

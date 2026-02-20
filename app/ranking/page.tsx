@@ -16,6 +16,13 @@ const GAMES = [
   { id: "suika", label: "수박", emoji: "🍉", unit: "점", href: "/suika" },
   { id: "reaction", label: "반응속도", emoji: "⚡", unit: "ms", href: "/reaction" },
   { id: "mine", label: "지뢰찾기", emoji: "💣", unit: "초", href: "/mine" },
+  { id: "memory", label: "메모리 카드", emoji: "🃏", unit: "초", href: "/memory" },
+  { id: "colormatch", label: "컬러 매치", emoji: "🎨", unit: "점", href: "/colormatch" },
+  { id: "aim", label: "에임 트레이너", emoji: "🎯", unit: "ms", href: "/aim" },
+  { id: "maze", label: "미로 탈출", emoji: "🏁", unit: "초", href: "/maze" },
+  { id: "sudoku", label: "스도쿠", emoji: "🔢", unit: "초", href: "/sudoku" },
+  { id: "typing", label: "타이핑 레이서", emoji: "⌨️", unit: "WPM", href: "/typing" },
+  { id: "wordle", label: "워들", emoji: "🟩", unit: "회", href: "/wordle" },
 ];
 
 const UUID_KEY = "dev-playground-uuid";
@@ -78,7 +85,7 @@ export default function RankingPage() {
         </div>
 
         {/* Game tabs — grid, always fully visible */}
-        <div className="mb-5 grid w-full max-w-lg grid-cols-3 gap-1.5 sm:grid-cols-6">
+        <div className="mb-5 grid w-full max-w-2xl grid-cols-4 gap-1.5 sm:grid-cols-7">
           {GAMES.map((game) => {
             const isActive = activeTab === game.id;
             const count = rankings[game.id]?.length ?? 0;
