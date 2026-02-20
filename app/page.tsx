@@ -1,6 +1,17 @@
 import Link from "next/link";
 
-const APPS = [
+interface AppCard {
+  href: string;
+  emoji: string;
+  title: string;
+  description: string;
+  tag: string;
+  gradient: string;
+  border: string;
+  glow: string;
+}
+
+const GAMES: AppCard[] = [
   {
     href: "/fortune",
     emoji: "🎰",
@@ -83,10 +94,130 @@ const APPS = [
   },
 ];
 
+const TOOLS: AppCard[] = [
+  {
+    href: "/json",
+    emoji: "📋",
+    title: "JSON 포매터",
+    description: "JSON을 예쁘게 정렬하고, 트리뷰로 탐색하고, 압축하세요.",
+    tag: "도구 · 포맷",
+    gradient: "from-sky-500/20 via-blue-500/10 to-indigo-500/20",
+    border: "hover:border-sky-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(14,165,233,0.3)]",
+  },
+  {
+    href: "/regex",
+    emoji: "🔍",
+    title: "정규식 테스터",
+    description: "정규식을 입력하면 실시간으로 매칭 결과를 하이라이트합니다.",
+    tag: "도구 · 정규식",
+    gradient: "from-orange-500/20 via-amber-500/10 to-yellow-500/20",
+    border: "hover:border-orange-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.3)]",
+  },
+  {
+    href: "/color",
+    emoji: "🎨",
+    title: "색상 팔레트",
+    description: "색상 하나로 보색, 유사색, 삼각 배색 등 팔레트를 자동 생성.",
+    tag: "디자인 · 색상",
+    gradient: "from-pink-500/20 via-rose-500/10 to-red-500/20",
+    border: "hover:border-pink-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(236,72,153,0.3)]",
+  },
+  {
+    href: "/lorem",
+    emoji: "📝",
+    title: "더미 텍스트",
+    description: "한국어, 영어, 개발자 모드의 Lorem Ipsum 생성기.",
+    tag: "도구 · 텍스트",
+    gradient: "from-teal-500/20 via-cyan-500/10 to-sky-500/20",
+    border: "hover:border-teal-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(20,184,166,0.3)]",
+  },
+  {
+    href: "/pomodoro",
+    emoji: "🍅",
+    title: "뽀모도로 타이머",
+    description: "25분 집중, 5분 휴식. 생산성을 높이는 타이머.",
+    tag: "생산성 · 타이머",
+    gradient: "from-red-500/20 via-orange-500/10 to-amber-500/20",
+    border: "hover:border-red-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(239,68,68,0.3)]",
+  },
+  {
+    href: "/ascii",
+    emoji: "🔤",
+    title: "ASCII 아트",
+    description: "텍스트를 멋진 ASCII 아트로 변환! 다양한 폰트 지원.",
+    tag: "재미 · 변환",
+    gradient: "from-lime-500/20 via-green-500/10 to-emerald-500/20",
+    border: "hover:border-lime-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(132,204,22,0.3)]",
+  },
+  {
+    href: "/quiz",
+    emoji: "🧠",
+    title: "코딩 퀴즈",
+    description: "JS/TS 출력 결과를 맞춰보세요! 호이스팅, 클로저, Promise 등.",
+    tag: "학습 · 퀴즈",
+    gradient: "from-blue-500/20 via-indigo-500/10 to-violet-500/20",
+    border: "hover:border-blue-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.3)]",
+  },
+  {
+    href: "/meme",
+    emoji: "😂",
+    title: "개발자 한마디",
+    description: "개발자 밈, 명언, 유머를 랜덤으로 만나보세요.",
+    tag: "재미 · 밈",
+    gradient: "from-pink-500/20 via-fuchsia-500/10 to-purple-500/20",
+    border: "hover:border-pink-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(236,72,153,0.3)]",
+  },
+];
+
+function AppCardGrid({ apps, baseDelay = 0 }: { apps: AppCard[]; baseDelay?: number }) {
+  return (
+    <div className="grid w-full max-w-3xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {apps.map((app, i) => (
+        <div
+          key={app.title}
+          className="anim-fade-up"
+          style={{ animationDelay: `${baseDelay + i * 0.08}s` }}
+        >
+          <Link href={app.href} className="block h-full">
+            <div
+              className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-card-border bg-gradient-to-br ${app.gradient} p-6 backdrop-blur-sm transition-all duration-300 ${app.border} ${app.glow} cursor-pointer hover:-translate-y-1`}
+            >
+              <span className="mb-4 text-4xl transition-transform duration-300 group-hover:scale-110">
+                {app.emoji}
+              </span>
+              <h3 className="mb-1.5 text-lg font-bold text-zinc-100 transition-colors group-hover:text-white">
+                {app.title}
+              </h3>
+              <p className="mb-4 flex-1 text-sm leading-relaxed text-zinc-500 transition-colors group-hover:text-zinc-400">
+                {app.description}
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="rounded-md border border-white/5 bg-white/3 px-2 py-0.5 font-mono text-[10px] text-zinc-600">
+                  {app.tag}
+                </span>
+                <span className="font-mono text-xs text-zinc-600 transition-all group-hover:translate-x-1 group-hover:text-zinc-300">
+                  →
+                </span>
+              </div>
+            </div>
+          </Link>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <div className="noise grid-bg relative min-h-screen">
-      {/* Background orbs */}
       <div className="orb orb-1" />
       <div className="orb orb-2" />
       <div className="orb orb-3" />
@@ -108,7 +239,7 @@ export default function Home() {
             className="anim-fade-up text-4xl font-bold tracking-tight sm:text-6xl"
             style={{ animationDelay: "0.1s" }}
           >
-            <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
               Dev Playground
             </span>
           </h1>
@@ -118,64 +249,41 @@ export default function Home() {
             style={{ animationDelay: "0.2s" }}
           >
             프론트엔드 개발자를 위한 미니 프로젝트 모음
-            <br />
-            재밌는 거 하나 골라보세요 👇
           </p>
         </div>
 
-        {/* App Cards */}
-        <div className="grid w-full max-w-3xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {APPS.map((app, i) => {
-            const inner = (
-              <div
-                className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-card-border bg-gradient-to-br ${app.gradient} p-6 backdrop-blur-sm transition-all duration-300 ${app.border} ${app.glow} ${app.href ? "cursor-pointer hover:-translate-y-1" : "opacity-50 cursor-default"}`}
-              >
-                {/* Emoji */}
-                <span className="mb-4 text-4xl transition-transform duration-300 group-hover:scale-110">
-                  {app.emoji}
-                </span>
-
-                {/* Title */}
-                <h2 className="mb-1.5 text-lg font-bold text-zinc-100 transition-colors group-hover:text-white">
-                  {app.title}
-                </h2>
-
-                {/* Description */}
-                <p className="mb-4 flex-1 text-sm leading-relaxed text-zinc-500 transition-colors group-hover:text-zinc-400">
-                  {app.description}
-                </p>
-
-                {/* Tag + Arrow */}
-                <div className="flex items-center justify-between">
-                  <span className="rounded-md border border-white/5 bg-white/[0.03] px-2 py-0.5 font-mono text-[10px] text-zinc-600">
-                    {app.tag}
-                  </span>
-                  {app.href && (
-                    <span className="font-mono text-xs text-zinc-600 transition-all group-hover:translate-x-1 group-hover:text-zinc-300">
-                      →
-                    </span>
-                  )}
-                </div>
-              </div>
-            );
-
-            return (
-              <div
-                key={app.title}
-                className="anim-fade-up"
-                style={{ animationDelay: `${0.3 + i * 0.1}s` }}
-              >
-                {app.href ? (
-                  <Link href={app.href} className="block h-full">
-                    {inner}
-                  </Link>
-                ) : (
-                  inner
-                )}
-              </div>
-            );
-          })}
+        {/* Games Section */}
+        <div className="mb-6 flex w-full max-w-3xl items-center gap-3 anim-fade-up" style={{ animationDelay: "0.3s" }}>
+          <span className="text-2xl">🎮</span>
+          <div>
+            <h2 className="text-lg font-bold text-zinc-100">게임</h2>
+            <p className="font-mono text-[11px] text-zinc-600">미니게임 모음 · 랭킹 경쟁</p>
+          </div>
+          <div className="ml-2 rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-[10px] text-accent-2">
+            {GAMES.length}
+          </div>
         </div>
+        <AppCardGrid apps={GAMES} baseDelay={0.35} />
+
+        {/* Divider */}
+        <div className="my-12 flex w-full max-w-3xl items-center gap-4">
+          <div className="h-px flex-1 bg-card-border" />
+          <span className="font-mono text-[10px] text-zinc-600">· · ·</span>
+          <div className="h-px flex-1 bg-card-border" />
+        </div>
+
+        {/* Tools Section */}
+        <div className="mb-6 flex w-full max-w-3xl items-center gap-3 anim-fade-up" style={{ animationDelay: "0.4s" }}>
+          <span className="text-2xl">🛠</span>
+          <div>
+            <h2 className="text-lg font-bold text-zinc-100">도구 & 유틸</h2>
+            <p className="font-mono text-[11px] text-zinc-600">개발에 유용한 도구 모음</p>
+          </div>
+          <div className="ml-2 rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-[10px] text-accent-2">
+            {TOOLS.length}
+          </div>
+        </div>
+        <AppCardGrid apps={TOOLS} baseDelay={0.45} />
 
         {/* Footer */}
         <footer

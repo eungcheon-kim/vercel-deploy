@@ -15,9 +15,33 @@ const GAMES = [
   { href: "/mine", label: "지뢰", emoji: "💣" },
 ];
 
+const TOOLS = [
+  { href: "/json", label: "JSON", emoji: "📋" },
+  { href: "/regex", label: "정규식", emoji: "🔍" },
+  { href: "/color", label: "색상", emoji: "🎨" },
+  { href: "/lorem", label: "더미", emoji: "📝" },
+  { href: "/pomodoro", label: "타이머", emoji: "🍅" },
+  { href: "/ascii", label: "ASCII", emoji: "🔤" },
+  { href: "/quiz", label: "퀴즈", emoji: "🧠" },
+  { href: "/meme", label: "밈", emoji: "😂" },
+];
+
+const CATEGORIES = [
+  { id: "game" as const, label: "게임", emoji: "🎮", items: GAMES },
+  { id: "tool" as const, label: "도구", emoji: "🛠", items: TOOLS },
+];
+
+type CategoryId = (typeof CATEGORIES)[number]["id"];
+
+const PATH_TO_CATEGORY = new Map<string, CategoryId>();
+CATEGORIES.forEach((cat) => cat.items.forEach((item) => PATH_TO_CATEGORY.set(item.href, cat.id)));
+
 export default function NavBar() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const currentCategory = PATH_TO_CATEGORY.get(pathname);
+  const showDock = !!currentCategory;
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLAnchorElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -25,12 +49,21 @@ export default function NavBar() {
   const [nickname, setNickname] = useState("");
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState("");
+  const [dockTab, setDockTab] = useState<CategoryId>("game");
+  const [dockOpen, setDockOpen] = useState(true);
 
   // Initialize user on mount
   useEffect(() => {
     const user = getOrCreateUser();
     setNickname(user.nickname);
   }, []);
+
+  // Sync dock tab with current page
+  useEffect(() => {
+    if (currentCategory) setDockTab(currentCategory);
+  }, [currentCategory]);
+
+  const activeCat = CATEGORIES.find((c) => c.id === dockTab)!;
 
   // Auto-scroll to active item
   useEffect(() => {
@@ -40,7 +73,7 @@ export default function NavBar() {
       const left = el.offsetLeft - container.offsetWidth / 2 + el.offsetWidth / 2;
       container.scrollTo({ left, behavior: "smooth" });
     }
-  }, [pathname]);
+  }, [pathname, dockTab]);
 
   // Focus input on edit
   useEffect(() => {
@@ -144,34 +177,75 @@ export default function NavBar() {
         </div>
       </nav>
 
-      {/* Bottom game dock */}
-      {!isHome && (
+      {/* Bottom dock */}
+      {showDock && (
         <div className="fixed bottom-0 z-50 flex w-full justify-center px-3 pb-3 pt-1">
-          <div
-            ref={scrollRef}
-            className="flex max-w-[calc(100vw-24px)] items-center gap-0.5 overflow-x-auto rounded-2xl border border-card-border bg-card-bg/90 p-1 shadow-2xl shadow-black/50 backdrop-blur-xl scrollbar-none"
-          >
-            {GAMES.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  ref={isActive ? activeRef : undefined}
-                  className={`flex shrink-0 flex-col items-center gap-0.5 rounded-xl px-2.5 py-1.5 transition-all duration-150 ${
-                    isActive
-                      ? "bg-accent/15 text-accent-2"
-                      : "text-zinc-500 hover:bg-white/5 hover:text-zinc-200"
-                  }`}
+          {dockOpen ? (
+            <div className="flex max-w-[calc(100vw-24px)] flex-col overflow-hidden rounded-2xl border border-card-border bg-card-bg/90 shadow-2xl shadow-black/50 backdrop-blur-xl">
+              {/* Category tab bar */}
+              <div className="flex items-center border-b border-card-border px-1.5 py-1">
+                <div className="flex items-center gap-1">
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setDockTab(cat.id)}
+                      className={`flex items-center gap-1 rounded-lg px-2.5 py-1 font-mono text-[10px] transition-all ${
+                        dockTab === cat.id
+                          ? "bg-accent/15 text-accent-2"
+                          : "text-zinc-600 hover:bg-white/5 hover:text-zinc-300"
+                      }`}
+                    >
+                      <span className="text-xs leading-none">{cat.emoji}</span>
+                      <span>{cat.label}</span>
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setDockOpen(false)}
+                  className="ml-auto rounded-lg px-1.5 py-1 text-zinc-600 transition-colors hover:text-zinc-300"
+                  title="독 접기"
                 >
-                  <span className={`text-base leading-none transition-transform duration-150 ${isActive ? "scale-110" : ""}`}>
-                    {item.emoji}
-                  </span>
-                  <span className="font-mono text-[8px] leading-tight">{item.label}</span>
-                </Link>
-              );
-            })}
-          </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+
+              {/* Items */}
+              <div
+                ref={scrollRef}
+                className="flex items-center gap-0.5 overflow-x-auto p-1 scrollbar-none"
+              >
+                {activeCat.items.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      ref={isActive ? activeRef : undefined}
+                      className={`flex shrink-0 flex-col items-center gap-0.5 rounded-xl px-2.5 py-1.5 transition-all duration-150 ${
+                        isActive
+                          ? "bg-accent/15 text-accent-2"
+                          : "text-zinc-500 hover:bg-white/5 hover:text-zinc-200"
+                      }`}
+                    >
+                      <span className={`text-base leading-none transition-transform duration-150 ${isActive ? "scale-110" : ""}`}>
+                        {item.emoji}
+                      </span>
+                      <span className="font-mono text-[8px] leading-tight">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setDockOpen(true)}
+              className="flex items-center gap-1.5 rounded-full border border-card-border bg-card-bg/90 px-3.5 py-2 shadow-2xl shadow-black/50 backdrop-blur-xl transition-all hover:border-zinc-600 hover:bg-white/5"
+              title="독 열기"
+            >
+              <span className="text-sm">{activeCat.emoji}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500"><polyline points="6 15 12 9 18 15"/></svg>
+            </button>
+          )}
         </div>
       )}
     </>
