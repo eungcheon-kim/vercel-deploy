@@ -20,6 +20,9 @@ const GAMES = [
   { href: "/sudoku", label: "스도쿠", emoji: "🔢" },
   { href: "/typing", label: "타이핑", emoji: "⌨️" },
   { href: "/wordle", label: "워들", emoji: "🟩" },
+  { href: "/breakout", label: "벽돌깨기", emoji: "🧱" },
+  { href: "/baseball", label: "숫자야구", emoji: "⚾" },
+  { href: "/tetris", label: "테트리스", emoji: "🧱" },
 ];
 
 const TOOLS = [

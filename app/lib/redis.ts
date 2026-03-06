@@ -39,4 +39,7 @@ export const GAME_CONFIG: Record<
   sudoku: { label: "스도쿠", unit: "초", direction: "asc" },
   typing: { label: "타이핑 레이서", unit: "WPM", direction: "desc" },
   wordle: { label: "워들", unit: "회", direction: "asc" },
+  breakout: { label: "벽돌깨기", unit: "점", direction: "desc" },
+  baseball: { label: "숫자야구", unit: "회", direction: "asc" },
+  tetris: { label: "테트리스", unit: "점", direction: "desc" },
 };
