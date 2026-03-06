@@ -23,6 +23,9 @@ const GAMES = [
   { id: "sudoku", label: "스도쿠", emoji: "🔢", unit: "초", href: "/sudoku" },
   { id: "typing", label: "타이핑 레이서", emoji: "⌨️", unit: "WPM", href: "/typing" },
   { id: "wordle", label: "워들", emoji: "🟩", unit: "회", href: "/wordle" },
+  { id: "breakout", label: "벽돌깨기", emoji: "🧱", unit: "점", href: "/breakout" },
+  { id: "baseball", label: "숫자야구", emoji: "⚾", unit: "회", href: "/baseball" },
+  { id: "tetris", label: "테트리스", emoji: "🧱", unit: "점", href: "/tetris" },
 ];
 
 const UUID_KEY = "dev-playground-uuid";
