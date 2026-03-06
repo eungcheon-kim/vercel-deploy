@@ -26,6 +26,7 @@ const GAMES = [
   { id: "breakout", label: "벽돌깨기", emoji: "🧱", unit: "점", href: "/breakout" },
   { id: "baseball", label: "숫자야구", emoji: "⚾", unit: "회", href: "/baseball" },
   { id: "tetris", label: "테트리스", emoji: "🧱", unit: "점", href: "/tetris" },
+  { id: "whackmole", label: "두더지 잡기", emoji: "🔨", unit: "점", href: "/whackmole" },
 ];
 
 const UUID_KEY = "dev-playground-uuid";
