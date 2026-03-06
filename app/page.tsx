@@ -183,6 +183,16 @@ const GAMES: AppCard[] = [
     glow: "group-hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.3)]",
   },
   {
+    href: "/whackmole",
+    emoji: "🔨",
+    title: "두더지 잡기",
+    description: "올라오는 두더지를 빠르게 클릭! 30초 안에 최고 점수를 노려보세요.",
+    tag: "아케이드 · 타임어택",
+    gradient: "from-amber-500/20 via-orange-500/10 to-red-500/20",
+    border: "hover:border-amber-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(251,191,36,0.3)]",
+  },
+  {
     href: "/ranking",
     emoji: "🏆",
     title: "랭킹보드",

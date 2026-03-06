@@ -42,4 +42,5 @@ export const GAME_CONFIG: Record<
   breakout: { label: "벽돌깨기", unit: "점", direction: "desc" },
   baseball: { label: "숫자야구", unit: "회", direction: "asc" },
   tetris: { label: "테트리스", unit: "점", direction: "desc" },
+  whackmole: { label: "두더지 잡기", unit: "점", direction: "desc" },
 };

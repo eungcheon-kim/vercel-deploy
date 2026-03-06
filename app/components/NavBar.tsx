@@ -23,6 +23,7 @@ const GAMES = [
   { href: "/breakout", label: "벽돌깨기", emoji: "🧱" },
   { href: "/baseball", label: "숫자야구", emoji: "⚾" },
   { href: "/tetris", label: "테트리스", emoji: "🧱" },
+  { href: "/whackmole", label: "두더지", emoji: "🔨" },
 ];
 
 const TOOLS = [
