@@ -35,6 +35,7 @@ const TOOLS = [
   { href: "/ascii", label: "ASCII", emoji: "🔤" },
   { href: "/quiz", label: "퀴즈", emoji: "🧠" },
   { href: "/meme", label: "밈", emoji: "😂" },
+  { href: "/mbti", label: "MBTI", emoji: "🧬" },
 ];
 
 const CATEGORIES = [

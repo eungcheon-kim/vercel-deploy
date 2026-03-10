@@ -285,6 +285,16 @@ const TOOLS: AppCard[] = [
     border: "hover:border-pink-500/40",
     glow: "group-hover:shadow-[0_0_40px_-10px_rgba(236,72,153,0.3)]",
   },
+  {
+    href: "/mbti",
+    emoji: "🧬",
+    title: "개발자 MBTI",
+    description: "12가지 개발 상황으로 알아보는 나의 개발자 성격 유형 테스트.",
+    tag: "심리 · MBTI",
+    gradient: "from-violet-500/20 via-purple-500/10 to-fuchsia-500/20",
+    border: "hover:border-violet-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(139,92,246,0.3)]",
+  },
 ];
 
 function AppCardGrid({ apps, baseDelay = 0 }: { apps: AppCard[]; baseDelay?: number }) {
