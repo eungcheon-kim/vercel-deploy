@@ -288,8 +288,8 @@ const TOOLS: AppCard[] = [
   {
     href: "/mbti",
     emoji: "🧬",
-    title: "개발자 MBTI",
-    description: "12가지 개발 상황으로 알아보는 나의 개발자 성격 유형 테스트.",
+    title: "MBTI 테스트",
+    description: "12가지 일상 속 선택으로 알아보는 나의 MBTI 성격 유형 테스트.",
     tag: "심리 · MBTI",
     gradient: "from-violet-500/20 via-purple-500/10 to-fuchsia-500/20",
     border: "hover:border-violet-500/40",

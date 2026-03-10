@@ -89,9 +89,9 @@ export default function MbtiTest() {
   const shareResult = useCallback(() => {
     if (!resultType || !RESULTS[resultType]) return;
     const r = RESULTS[resultType];
-    const text = `나의 개발자 MBTI: ${r.type} - ${r.emoji} ${r.title}\n${r.description}\n\nDev Playground에서 테스트해보세요!`;
+    const text = `나의 MBTI: ${r.type} - ${r.emoji} ${r.title}\n${r.description}\n\nDev Playground에서 테스트해보세요!`;
     if (navigator.share) {
-      navigator.share({ title: "개발자 MBTI 테스트", text }).catch(() => {});
+      navigator.share({ title: "MBTI 성격유형 테스트", text }).catch(() => {});
     } else {
       navigator.clipboard.writeText(text).then(() => {
         alert("결과가 클립보드에 복사되었습니다!");
@@ -115,12 +115,12 @@ export default function MbtiTest() {
 
           <div className="flex flex-col gap-3">
             <h3 className="text-2xl font-bold text-zinc-100">
-              개발자 MBTI 테스트
+              MBTI 성격유형 테스트
             </h3>
             <p className="text-sm leading-relaxed text-zinc-400">
-              12가지 개발 상황에서의 당신의 선택으로
+              12가지 일상 속 선택으로
               <br />
-              개발자 성격 유형을 알아보세요!
+              나의 성격 유형을 알아보세요!
             </p>
           </div>
 
@@ -266,7 +266,7 @@ export default function MbtiTest() {
           <div className="flex flex-col gap-2">
             <p className="text-lg font-bold text-zinc-200">분석 중...</p>
             <p className="font-mono text-xs text-zinc-500">
-              당신의 개발자 DNA를 해독하고 있습니다
+              당신의 성격 유형을 분석하고 있습니다
             </p>
           </div>
           <div className="flex gap-1.5">
@@ -354,7 +354,7 @@ export default function MbtiTest() {
             </div>
           </div>
 
-          {/* Strengths & Tech */}
+          {/* Strengths & Keywords */}
           <div className="grid w-full grid-cols-2 gap-3">
             <div className="rounded-2xl border border-card-border bg-card-bg/60 p-4">
               <h4 className="mb-3 text-xs font-bold text-zinc-400">💪 강점</h4>
@@ -371,15 +371,15 @@ export default function MbtiTest() {
             </div>
             <div className="rounded-2xl border border-card-border bg-card-bg/60 p-4">
               <h4 className="mb-3 text-xs font-bold text-zinc-400">
-                🛠 추천 기술
+                ✨ 키워드
               </h4>
               <div className="flex flex-col gap-1.5">
-                {result.techStack.map((t) => (
+                {result.keywords.map((k) => (
                   <span
-                    key={t}
+                    key={k}
                     className="rounded-lg bg-fuchsia-500/10 px-2.5 py-1 text-center text-xs text-fuchsia-300"
                   >
-                    {t}
+                    {k}
                   </span>
                 ))}
               </div>
