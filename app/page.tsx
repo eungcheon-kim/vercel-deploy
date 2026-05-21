@@ -204,6 +204,19 @@ const GAMES: AppCard[] = [
   },
 ];
 
+const COMMUNITY: AppCard[] = [
+  {
+    href: "/vote",
+    emoji: "🗳️",
+    title: "익명투표",
+    description: "투표를 만들고 익명으로 참여하세요. 단건/복수 선택, 마크다운 설명 지원.",
+    tag: "커뮤니티 · 투표",
+    gradient: "from-violet-500/20 via-indigo-500/10 to-blue-500/20",
+    border: "hover:border-violet-500/40",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(139,92,246,0.3)]",
+  },
+];
+
 const TOOLS: AppCard[] = [
   {
     href: "/json",
@@ -404,6 +417,26 @@ export default function Home() {
           </div>
         </div>
         <AppCardGrid apps={TOOLS} baseDelay={0.45} />
+
+        {/* Divider */}
+        <div className="my-12 flex w-full max-w-3xl items-center gap-4">
+          <div className="h-px flex-1 bg-card-border" />
+          <span className="font-mono text-[10px] text-zinc-600">· · ·</span>
+          <div className="h-px flex-1 bg-card-border" />
+        </div>
+
+        {/* Community Section */}
+        <div className="mb-6 flex w-full max-w-3xl items-center gap-3 anim-fade-up" style={{ animationDelay: "0.5s" }}>
+          <span className="text-2xl">💬</span>
+          <div>
+            <h2 className="text-lg font-bold text-zinc-100">커뮤니티</h2>
+            <p className="font-mono text-[11px] text-zinc-600">함께 참여하는 공간</p>
+          </div>
+          <div className="ml-2 rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-[10px] text-accent-2">
+            {COMMUNITY.length}
+          </div>
+        </div>
+        <AppCardGrid apps={COMMUNITY} baseDelay={0.55} />
 
         {/* Footer */}
         <footer

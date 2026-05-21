@@ -38,9 +38,14 @@ const TOOLS = [
   { href: "/mbti", label: "MBTI", emoji: "🧬" },
 ];
 
+const COMMUNITY = [
+  { href: "/vote", label: "투표", emoji: "🗳️" },
+];
+
 const CATEGORIES = [
   { id: "game" as const, label: "게임", emoji: "🎮", items: GAMES },
   { id: "tool" as const, label: "도구", emoji: "🛠", items: TOOLS },
+  { id: "community" as const, label: "커뮤니티", emoji: "💬", items: COMMUNITY },
 ];
 
 type CategoryId = (typeof CATEGORIES)[number]["id"];
